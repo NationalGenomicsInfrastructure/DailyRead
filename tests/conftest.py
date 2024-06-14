@@ -13,7 +13,7 @@ dummy_order_open = {
     "orderer": "dummy@dummy.se",
     "project_dates": {
         "2023-06-15": ["Samples Received"],
-        "2023-06-28": ["Reception Control finished", "Library QC finished"],
+        "2023-06-28": ["Reception Control Finished", "Library QC Finished"],
     },
     "internal_id": "P123456",
     "internal_name": "D.Dummysson_23_01",
@@ -24,9 +24,9 @@ dummy_order_closed = {
     "orderer": "dummy@dummy.se",
     "project_dates": {
         "2023-06-15": ["Samples Received"],
-        "2023-06-28": ["Reception Control finished", "Library QC finished"],
+        "2023-06-28": ["Reception Control Finished", "Library QC Finished"],
         "2023-07-28": ["All Samples Sequenced"],
-        "2023-07-29": ["All Raw data Delivered"],
+        "2023-07-29": ["All Raw Data Delivered"],
     },
     "internal_id": "P123455",
     "internal_name": "D.Dummysson_23_02",

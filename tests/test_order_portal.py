@@ -22,11 +22,11 @@ def test_get_and_process_orders_open_upload_fail(data_repo_full, mock_project_da
 
     assert op.all_orders[0]["identifier"] == order_id
     modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
-    assert modified_orders[orderer]["projects"]["Library QC finished"][0] == data_master.data[order_id]
+    assert modified_orders[orderer]["projects"]["Library QC Finished"][0] == data_master.data[order_id]
     with mock.patch("daily_read.order_portal.requests.post") as mock_post:
         mock_post.return_value.status_code = 404
         uploaded = op.upload_report_to_order_portal(
-            "<html>test data</html>", modified_orders[orderer]["projects"]["Library QC finished"][0], "published"
+            "<html>test data</html>", modified_orders[orderer]["projects"]["Library QC Finished"][0], "published"
         )
         assert not uploaded
         assert f"Report not updated for order with project id: {order_id}\nReason: 404" in caplog.text
@@ -47,11 +47,11 @@ def test_get_and_process_orders_open_and_upload(data_repo_full, mock_project_dat
 
     assert op.all_orders[0]["identifier"] == order_id
     modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
-    assert modified_orders[orderer]["projects"]["Library QC finished"][0] == data_master.data[order_id]
+    assert modified_orders[orderer]["projects"]["Library QC Finished"][0] == data_master.data[order_id]
     with mock.patch("daily_read.order_portal.requests.post") as mock_post:
         mock_post.return_value.status_code = 200
         op.upload_report_to_order_portal(
-            "<html>test data</html>", modified_orders[orderer]["projects"]["Library QC finished"][0], "published"
+            "<html>test data</html>", modified_orders[orderer]["projects"]["Library QC Finished"][0], "published"
         )
         url = f"{config_values.ORDER_PORTAL_URL}/api/v1/report"
         indata = dict(
@@ -86,12 +86,12 @@ def test_get_and_process_orders_open_with_report_and_upload(
 
     assert op.all_orders[3]["identifier"] == order_id
     modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
-    assert modified_orders[orderer]["projects"]["Library QC finished"][0] == data_master.data[order_id]
+    assert modified_orders[orderer]["projects"]["Library QC Finished"][0] == data_master.data[order_id]
     with mock.patch("daily_read.order_portal.requests.post") as mock_post:
         mock_post.return_value.status_code = 200
         with caplog.at_level(logging.INFO):
             uploaded = op.upload_report_to_order_portal(
-                "<html>test data</html>", modified_orders[orderer]["projects"]["Library QC finished"][0], "published"
+                "<html>test data</html>", modified_orders[orderer]["projects"]["Library QC Finished"][0], "published"
             )
             url = f"{config_values.ORDER_PORTAL_URL}/api/v1/report/{op.all_orders[3]['reports'][0]['iuid']}"
             indata = dict(
@@ -129,11 +129,11 @@ def test_get_and_process_orders_open_to_aborted_with_report_and_upload(
     assert op.all_orders[4]["identifier"] == order_id
     modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
 
-    assert modified_orders[orderer]["delete_report_for"]["Library QC finished"][0] == data_master.data[order_id]
+    assert modified_orders[orderer]["delete_report_for"]["Library QC Finished"][0] == data_master.data[order_id]
     with mock.patch("daily_read.order_portal.requests.post") as mock_post:
         mock_post.return_value.status_code = 200
         op.upload_report_to_order_portal(
-            "", modified_orders[orderer]["delete_report_for"]["Library QC finished"][0], "review"
+            "", modified_orders[orderer]["delete_report_for"]["Library QC Finished"][0], "review"
         )
         url = f"{config_values.ORDER_PORTAL_URL}/api/v1/report/{op.all_orders[4]['reports'][0]['iuid']}"
         indata = dict(
@@ -161,7 +161,7 @@ def test_get_and_process_orders_closed(data_repo_full, mock_project_data_record,
 
     assert op.all_orders[1]["identifier"] == order_id
     modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
-    assert modified_orders[orderer]["delete_report_for"]["All Raw data Delivered"][0] == data_master.data[order_id]
+    assert modified_orders[orderer]["delete_report_for"]["All Raw Data Delivered"][0] == data_master.data[order_id]
 
 
 def test_get_and_process_orders_mult_reports(data_repo_full, mock_project_data_record, get_env_file_path):

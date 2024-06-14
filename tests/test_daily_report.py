@@ -22,7 +22,7 @@ def test_write_report_to_out_dir(data_repo_full, mock_project_data_record, creat
 
     assert op.all_orders[0]["identifier"] == order_id
     modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
-    assert modified_orders[orderer]["projects"]["Library QC finished"][0] == data_master.data[order_id]
+    assert modified_orders[orderer]["projects"]["Library QC Finished"][0] == data_master.data[order_id]
     pull_date = f"{datetime.datetime.strptime(modified_orders[orderer]['pull_date'], '%Y-%m-%d %H:%M:%S.%f').date()}"
     report_path = os.path.join(config_values.REPORTS_LOCATION, f"{orderer.split('@')[0]}_{pull_date}.html")
 
