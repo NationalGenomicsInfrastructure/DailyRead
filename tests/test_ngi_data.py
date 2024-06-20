@@ -231,8 +231,11 @@ def test_get_data_with_no_project_dates_closed(data_repo_full, mocked_statusdb_c
             data_master.get_data("NGI123459")
             assert len(data_master.data.keys()) == 1
             assert "NGI123459" in data_master.data
-            assert "No project dates found for NGI123459, trying to find status from internal_proj_status" in caplog.text
+            assert (
+                "No project dates found for NGI123459, trying to find status from internal_proj_status" in caplog.text
+            )
             assert data_master.data["NGI123459"].status == "Closed"
+
 
 def test_get_data_with_no_project_dates_ongoing(data_repo_full, mocked_statusdb_conn_rows, caplog, get_env_file_path):
     """Test log output when no project dates are found in statusdb for a specific project"""
@@ -252,8 +255,14 @@ def test_get_data_with_no_project_dates_ongoing(data_repo_full, mocked_statusdb_
             data_master.get_data("NGI123459")
             assert len(data_master.data.keys()) == 1
             assert "NGI123459" in data_master.data
-            assert "No project dates found for NGI123459, trying to find status from internal_proj_status" in caplog.text
-            assert "ERROR! No project dates or incorrect internal_proj_status found for NGI123459, no status set!" in caplog.text
+            assert (
+                "No project dates found for NGI123459, trying to find status from internal_proj_status" in caplog.text
+            )
+            assert (
+                "ERROR! No project dates or incorrect internal_proj_status found for NGI123459, no status set!"
+                in caplog.text
+            )
+
 
 def test_skip_order_with_no_year(data_repo_full, mocked_statusdb_conn_rows, caplog, get_env_file_path):
     """Test that orders with no order year (i.e. with no contract signed) are skipped"""
