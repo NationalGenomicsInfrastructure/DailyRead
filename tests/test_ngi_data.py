@@ -213,7 +213,31 @@ def test_data_loc_not_dir(mock_status, tmp_path, get_env_file_path):
         ngi_data.ProjectDataMaster(config_values)
 
 
-def test_get_data_with_no_project_dates(data_repo_full, mocked_statusdb_conn_rows, caplog, get_env_file_path):
+def test_get_data_with_no_project_dates_closed(data_repo_full, mocked_statusdb_conn_rows, caplog, get_env_file_path):
+    """Test log output when no project dates are found in statusdb for a Closed project"""
+    from copy import deepcopy
+
+    config_values = config.Config(get_env_file_path)
+    with mock.patch("daily_read.statusdb.StatusDBSession"):
+        data_master = ngi_data.ProjectDataMaster(config_values)
+        data_master.sources[0].statusdb_session.rows.return_value = mocked_statusdb_conn_rows
+        proj_no_dates = deepcopy(data_master.sources[0].statusdb_session.rows.return_value[1])
+        proj_no_dates.value["proj_dates"] = {}
+        proj_no_dates.value["portal_id"] = "NGI123459"
+        proj_no_dates.value["project_id"] = "NGI123459"
+        proj_no_dates.key[1] = "NGI123459"
+        data_master.sources[0].statusdb_session.rows.return_value.append(proj_no_dates)
+        with caplog.at_level(logging.INFO):
+            data_master.get_data("NGI123459")
+            assert len(data_master.data.keys()) == 1
+            assert "NGI123459" in data_master.data
+            assert (
+                "No project dates found for NGI123459, trying to find status from internal_proj_status" in caplog.text
+            )
+            assert data_master.data["NGI123459"].status == "Closed"
+
+
+def test_get_data_with_no_project_dates_ongoing(data_repo_full, mocked_statusdb_conn_rows, caplog, get_env_file_path):
     """Test log output when no project dates are found in statusdb for a specific project"""
     from copy import deepcopy
 
@@ -224,13 +248,20 @@ def test_get_data_with_no_project_dates(data_repo_full, mocked_statusdb_conn_row
         proj_no_dates = deepcopy(data_master.sources[0].statusdb_session.rows.return_value[0])
         proj_no_dates.value["proj_dates"] = {}
         proj_no_dates.value["portal_id"] = "NGI123459"
+        proj_no_dates.value["project_id"] = "NGI123459"
+        proj_no_dates.key[1] = "NGI123459"
         data_master.sources[0].statusdb_session.rows.return_value.append(proj_no_dates)
         with caplog.at_level(logging.INFO):
             data_master.get_data("NGI123459")
             assert len(data_master.data.keys()) == 1
             assert "NGI123459" in data_master.data
-            assert "No project dates found for NGI123459, so setting its status to Pending" in caplog.text
-            assert data_master.data["NGI123459"].status == "Pending"
+            assert (
+                "No project dates found for NGI123459, trying to find status from internal_proj_status" in caplog.text
+            )
+            assert (
+                "ERROR! No project dates or incorrect internal_proj_status found for NGI123459, no status set!"
+                in caplog.text
+            )
 
 
 def test_skip_order_with_no_year(data_repo_full, mocked_statusdb_conn_rows, caplog, get_env_file_path):
