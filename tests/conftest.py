@@ -33,6 +33,14 @@ dummy_order_closed = {
     "internal_proj_status": "Ongoing",
 }
 
+dummy_order_closed_no_report = {
+    "orderer": "dummy@dummy.se",
+    "project_dates": {},
+    "internal_id": "P123462",
+    "internal_name": "D.Dummysson_23_02",
+    "internal_proj_status": "Ongoing",
+}
+
 order_portal_resp_order_processing = {
     "identifier": "NGI123456",
     "title": "Test run with nano",
@@ -161,7 +169,19 @@ order_portal_resp_order_closed = {
         },
     },
     "status": "closed",
-    "reports": [],
+    "reports": [
+        {
+            "iuid": "c5ee943",
+            "name": "Project Progress",
+            "filename": "project_progress.html",
+            "status": "published",
+            "modified": "2024-01-15T15:09:18.732Z",
+            "links": {
+                "api": {"href": "https://orderportal.example.com/orders/api/v1/report/c5ee943"},
+                "file": {"href": "https://orderportal.example.com/orders/report/c5ee943"},
+            },
+        },
+    ],
     "history": {
         "preparation": "2023-07-06",
         "submitted": "2023-07-06",
@@ -186,6 +206,10 @@ order_portal_resp_order_closed = {
         "project_ngi_name": "D.Dummysson_23_02",
     },
 }
+
+order_portal_resp_order_closed_no_report = copy.deepcopy(order_portal_resp_order_closed)
+order_portal_resp_order_closed_no_report["identifier"] = "NGI123462"
+order_portal_resp_order_closed_no_report["reports"] = []
 
 
 def _create_all_files(file_list, data_location):
@@ -344,6 +368,16 @@ def mock_project_data_record():
                 config_values.STATUS_PRIORITY_REV,
                 dummy_order_closed["internal_proj_status"],
             )
+        if status == "closed_no_report":
+            mock_record = ngi_data.ProjectDataRecord(
+                "NGIS/2023/staged_file2.json",
+                dummy_order_closed_no_report["orderer"],
+                dummy_order_closed_no_report["project_dates"],
+                dummy_order_closed_no_report["internal_id"],
+                dummy_order_closed_no_report["internal_name"],
+                config_values.STATUS_PRIORITY_REV,
+                dummy_order_closed_no_report["internal_proj_status"],
+            )
         if status == "open_with_report":
             mock_record = ngi_data.ProjectDataRecord(
                 "NGIS/2023/NGI123453.json",
@@ -389,6 +423,7 @@ def mocked_requests_get(monkeypatch):
                     order_portal_resp_order_processing_mult_reports,
                     order_portal_resp_order_processing_single_report,
                     order_portal_resp_order_processing_to_aborted,
+                    order_portal_resp_order_closed_no_report,
                 ]
             }
 

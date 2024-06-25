@@ -116,7 +116,8 @@ class OrderPortal(object):
 
             order_updates_item = order_updates[proj_info.orderer]
             if delete_report:
-                order_updates_item["delete_report_for"].setdefault(proj_info.status, []).append(proj_info)
+                if order["reports"]:
+                    order_updates_item["delete_report_for"].setdefault(proj_info.status, []).append(proj_info)
             else:
                 order_updates_item["events"] += proj_info.events
 
