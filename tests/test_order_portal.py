@@ -164,6 +164,24 @@ def test_get_and_process_orders_closed(data_repo_full, mock_project_data_record,
     assert modified_orders[orderer]["delete_report_for"]["All Raw Data Delivered"][0] == data_master.data[order_id]
 
 
+def test_get_and_process_orders_closed_no_report(data_repo_full, mock_project_data_record, get_env_file_path):
+    """Test getting and processing an order closed within the timeframe of Project progress report deletion"""
+    orderer = "dummy@dummy.se"
+    order_id = "NGI123462"
+    config_values = config.Config(get_env_file_path)
+    with mock.patch("daily_read.statusdb.StatusDBSession"):
+        data_master = ngi_data.ProjectDataMaster(config_values)
+
+    data_master.data = {order_id: mock_project_data_record("closed_no_report")}
+
+    op = order_portal.OrderPortal(config_values, data_master)
+    op.get_orders(orderer=orderer)
+
+    assert op.all_orders[5]["identifier"] == order_id
+    modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
+    assert not modified_orders[orderer]["delete_report_for"]
+
+
 def test_get_and_process_orders_mult_reports(data_repo_full, mock_project_data_record, get_env_file_path):
     """Test getting and processing orders with multiple Project progress reports"""
     orderer = "dummy@dummy.se"
