@@ -130,20 +130,13 @@ def test_get_and_process_orders_open_to_aborted_with_report_and_upload(
     modified_orders = op.process_orders(config_values.STATUS_PRIORITY_REV)
 
     assert modified_orders[orderer]["delete_report_for"]["Library QC Finished"][0] == data_master.data[order_id]
-    with mock.patch("daily_read.order_portal.requests.post") as mock_post:
-        mock_post.return_value.status_code = 200
+    with mock.patch("daily_read.order_portal.requests.delete") as mock_delete:
+        mock_delete.return_value.status_code = 204
         op.upload_report_to_order_portal(
-            "", modified_orders[orderer]["delete_report_for"]["Library QC Finished"][0], "review"
+            "", modified_orders[orderer]["delete_report_for"]["Library QC Finished"][0], "delete"
         )
         url = f"{config_values.ORDER_PORTAL_URL}/api/v1/report/{op.all_orders[4]['reports'][0]['iuid']}"
-        indata = dict(
-            order=order_id,
-            name="Project Progress",
-            status="review",
-        )
-        mock_post.assert_called_once_with(
-            url, headers={"X-OrderPortal-API-key": config_values.ORDER_PORTAL_API_KEY}, json=indata
-        )
+        mock_delete.assert_called_once_with(url, headers={"X-OrderPortal-API-key": config_values.ORDER_PORTAL_API_KEY})
 
 
 def test_get_and_process_orders_closed(data_repo_full, mock_project_data_record, get_env_file_path):
