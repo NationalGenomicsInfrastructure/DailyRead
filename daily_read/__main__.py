@@ -96,8 +96,8 @@ def generate_all(ctx, upload=False, develop=False):
     for owner in modified_orders:
         if upload:
             report = daily_rep.populate_and_write_report(owner, modified_orders[owner], config_values.STATUS_PRIORITY)
-            # Publish reports with published, hide reports with review
-            for upload_category, report_state in {"projects": "published", "delete_report_for": "review"}.items():
+            # Publish reports with published, delete reports with delete
+            for upload_category, report_state in {"projects": "published", "delete_report_for": "delete"}.items():
                 for status in modified_orders[owner][upload_category].keys():
                     for project in modified_orders[owner][upload_category][status]:
                         request_success = False
