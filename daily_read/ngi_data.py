@@ -359,7 +359,7 @@ class StockholmProjectData(object):
                 close_date = (datetime.datetime.now() - relativedelta(months=6)).strftime("%Y-%m-%d")
             for row in self.statusdb_session.rows(close_date=close_date):
                 if "portal_id" not in row.value:
-                    # Probably a project with no associated order(e.g ESCG), log it and skip
+                    # Probably a project with no associated order(e.g legacy ESCG), log it and skip
                     log.error(f"No portal_id found in row {row.id}, skipping it!")
                     continue
                 portal_id = row.value["portal_id"]
