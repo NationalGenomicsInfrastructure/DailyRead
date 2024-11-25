@@ -139,7 +139,7 @@ class OrderPortal(object):
     def upload_report_to_order_portal(self, report, project, status):
         """Upload report to order portal
         With the status 'published' the user can see the report immediately
-        With the status 'review', the user will not be able to view the report(used here as a proxy for deletion)
+        With the status 'delete', the report will be deleted from the order portal
         """
         # Encoded to utf-8 to display special characters properly
         add_to_url = ""
@@ -159,10 +159,12 @@ class OrderPortal(object):
                 content_type="text/html",
             )
 
-        # TODO: check Encoded to utf-8 to display special characters properly
-        response = requests.post(url, headers=self.headers, json=indata)
+            # TODO: check Encoded to utf-8 to display special characters properly
+            response = requests.post(url, headers=self.headers, json=indata)
+        elif status == "delete":
+            response = requests.delete(url, headers=self.headers)
 
-        operation = "updated" if report else "hidden"
+        operation = "updated" if report else "deleted"
         if response.status_code == 200:
             log.info(f"Report {operation} for order with project id: {project.project_id}")
             return True
