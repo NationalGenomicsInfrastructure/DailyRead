@@ -1,4 +1,4 @@
-.github/workflows/check_pr_label.ymlname: Check Label on PR
+name: Check Label on PR
 on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
