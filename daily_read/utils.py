@@ -31,6 +31,7 @@ def get_git_commits():
         git_commits["git_commit_full"] = "unknown"
     return git_commits
 
+
 class ErrorCollectorHandler(logging.Handler):
     def __init__(self):
         super().__init__()
@@ -40,6 +41,7 @@ class ErrorCollectorHandler(logging.Handler):
         # Collect error-level log messages
         if record.levelno >= logging.ERROR:
             self.error_messages.append(record.msg)
+
 
 # Rudimentary Error reporting
 def error_reporting(log):
