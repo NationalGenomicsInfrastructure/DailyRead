@@ -31,19 +31,27 @@ def get_git_commits():
         git_commits["git_commit_full"] = "unknown"
     return git_commits
 
+class ErrorCollectorHandler(logging.Handler):
+    def __init__(self):
+        super().__init__()
+        self.error_messages = []
+
+    def emit(self, record):
+        # Collect error-level log messages
+        if record.levelno >= logging.ERROR:
+            self.error_messages.append(record.msg)
 
 # Rudimentary Error reporting
-def error_reporting(log, module="all"):
+def error_reporting(log):
     """Raise an error if there are Error level messages in the daily_read module logs"""
     error_string = ""
-    if module == "all":
-        module = "daily_read"
-    for child in log.root.manager.loggerDict:
-        if module in child:
-            cache = log.root.getChild(child)._cache
-            # If there are errors messages in the log, the cache will have the element 40: True
-            if 40 in cache and cache[40]:
-                error_string += f"\nErrors logged in {child} during execution"
+    for handler in log.root.handlers:
+        if isinstance(handler, ErrorCollectorHandler):
+            if handler.error_messages:
+                error_string = "Errors logged in DailyRead during execution\n"
+                error_string += "\n".join(handler.error_messages)
+
     if error_string:
+        # Suppress traceback
         sys.tracebacklimit = 0
         raise RuntimeError(error_string)
