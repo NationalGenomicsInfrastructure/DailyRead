@@ -58,7 +58,7 @@ class OrderPortal(object):
 
         try:
             self.all_orders = self.all_orders + response.json()["items"]
-        except requests.exceptions.JSONDecodeError as e:
+        except requests.exceptions.JSONDecodeError:
             log.critical(
                 f"Could not fetch orders for {{node: {node}, status: {status}, orderer={orderer}, recent={recent}}}"
             )
@@ -165,7 +165,8 @@ class OrderPortal(object):
             response = requests.delete(url, headers=self.headers)
 
         operation = "updated" if report else "deleted"
-        if response.status_code == 200:
+        # 200 OK or 204 No Content for successful report upload and deletion respectively
+        if response.status_code == 200 or response.status_code == 204:
             log.info(f"Report {operation} for order with project id: {project.project_id}")
             return True
         else:
