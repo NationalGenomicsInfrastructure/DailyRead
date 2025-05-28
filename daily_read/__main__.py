@@ -46,11 +46,12 @@ def daily_read_cli(ctx, env_file_path):
         log_file, maxBytes=1024 * 1024 * 100, backupCount=5
     )  # 5 files of 100MB
     rotating_file_handler.addFilter(daily_read.utils.ContextFilter())
+    error_handler = daily_read.utils.ErrorCollectorHandler()
 
     logging.basicConfig(
         level="INFO",
         format=LOG_FORMAT,
-        handlers=[rich_handler, rotating_file_handler],
+        handlers=[rich_handler, rotating_file_handler, error_handler],
     )
 
 
