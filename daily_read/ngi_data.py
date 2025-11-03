@@ -358,23 +358,23 @@ class StockholmProjectData(object):
             if close_date is None:
                 close_date = (datetime.datetime.now() - relativedelta(months=6)).strftime("%Y-%m-%d")
             for row in self.statusdb_session.rows(close_date=close_date):
-                if "portal_id" not in row.value:
+                if "portal_id" not in row["value"]:
                     # Probably a project with no associated order(e.g legacy ESCG), log it and skip
-                    log.error(f"No portal_id found in row {row.id}, skipping it!")
+                    log.error(f"No portal_id found in row {row['id']}, skipping it!")
                     continue
-                portal_id = row.value["portal_id"]
-                order_year = row.value["order_year"]
+                portal_id = row["value"]["portal_id"]
+                order_year = row["value"]["order_year"]
                 # Should not happen, upstream manual entry error if it happens
                 if not order_year:
                     log.error(f"No order year found for order {portal_id}, skipping it!")
                     continue
                 relative_path = f"{self.dirname}/{order_year}/{portal_id}.json"
 
-                project_dates = row.value["proj_dates"]
-                orderer = row.value["orderer"]
-                internal_id = row.value["project_id"]
-                internal_name = row.value["project_name"]
-                internal_proj_status = row.value["status"]
+                project_dates = row["value"]["proj_dates"]
+                orderer = row["value"]["orderer"]
+                internal_id = row["value"]["project_id"]
+                internal_name = row["value"]["project_name"]
+                internal_proj_status = row["value"]["status"]
 
                 self.data[portal_id] = ProjectDataRecord(
                     relative_path,
@@ -393,20 +393,20 @@ class StockholmProjectData(object):
         close_date = (datetime.datetime.now() - relativedelta(months=6)).strftime("%Y-%m-%d")
         rows = self.statusdb_session.rows(close_date=close_date)
         for row in rows:
-            if row.value["portal_id"] == project_id:
-                portal_id = row.value["portal_id"]
-                order_year = row.value["order_year"]
+            if row["value"]["portal_id"] == project_id:
+                portal_id = row["value"]["portal_id"]
+                order_year = row["value"]["order_year"]
                 # Should not happen, upstream manual entry error if it happens
                 if not order_year:
                     log.error(f"No order year found for order {portal_id}, skipping it!")
                     return
                 relative_path = f"{self.dirname}/{order_year}/{portal_id}.json"
 
-                project_dates = row.value["proj_dates"]
-                orderer = row.value["orderer"]
-                internal_id = row.value["project_id"]
-                internal_name = row.value["project_name"]
-                internal_proj_status = row.value["status"]
+                project_dates = row["value"]["proj_dates"]
+                orderer = row["value"]["orderer"]
+                internal_id = row["value"]["project_id"]
+                internal_name = row["value"]["project_name"]
+                internal_proj_status = row["value"]["status"]
 
                 self.data[portal_id] = ProjectDataRecord(
                     relative_path,

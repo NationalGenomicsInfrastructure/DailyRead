@@ -10,5 +10,5 @@ def test_no_statusdb_conn(data_repo_full, get_env_file_path):
     display_url_string = (
         rf"https:\/\/{config_values.STHLM_STATUSDB_USERNAME}:\*\*\*\*\*\*\*\*\*@{config_values.STHLM_STATUSDB_URL}"
     )
-    with pytest.raises(ConnectionError, match=f"Couchdb connection failed for url {display_url_string}") as err:
+    with pytest.raises(ConnectionError, match=rf"^Couchdb connection failed for url {display_url_string}") as err:
         statusdb.StatusDBSession(config_values)
