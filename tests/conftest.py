@@ -1,5 +1,4 @@
 import copy
-import couchdb
 import git
 import json
 import os
@@ -436,10 +435,10 @@ def mocked_requests_get(monkeypatch):
 @pytest.fixture
 def mocked_statusdb_conn_rows():
     """To substitute return value for the daily_read.statusdb.StatusDBSession.rows method"""
-    row1 = couchdb.client.Row(
-        id="b77d4f",
-        key=["XXXX-XX-XX", "P123457"],
-        value={
+    row1 = {
+        "id": "b77d4f",
+        "key": ["XXXX-XX-XX", "P123457"],
+        "value": {
             "orderer": "dummy@dummy.se",
             "portal_id": "NGI123457",
             "order_year": "2023",
@@ -448,11 +447,11 @@ def mocked_statusdb_conn_rows():
             "proj_dates": dummy_order_open["project_dates"],
             "status": "Ongoing",
         },
-    )
-    row2 = couchdb.client.Row(
-        id="b77d4g",
-        key=[(date.today() - timedelta(days=31)).strftime("%Y-%m-%d"), "P123458"],
-        value={
+    }
+    row2 = {
+        "id": "b77d4g",
+        "key": [(date.today() - timedelta(days=31)).strftime("%Y-%m-%d"), "P123458"],
+        "value": {
             "orderer": "test@dummy.se",
             "portal_id": "NGI123458",
             "order_year": "2023",
@@ -461,11 +460,11 @@ def mocked_statusdb_conn_rows():
             "proj_dates": dummy_order_closed["project_dates"],
             "status": "Closed",
         },
-    )
-    row3 = couchdb.client.Row(
-        id="b77d4d",
-        key=["XXXX-XX-XX", "P123460"],
-        value={
+    }
+    row3 = {
+        "id": "b77d4d",
+        "key": ["XXXX-XX-XX", "P123460"],
+        "value": {
             "orderer": "dummy@dummy.se",
             "portal_id": "NGI123460",
             "order_year": "",
@@ -474,7 +473,7 @@ def mocked_statusdb_conn_rows():
             "proj_dates": {},
             "status": "Reception control",
         },
-    )
+    }
     return [row1, row2, row3]
 
 

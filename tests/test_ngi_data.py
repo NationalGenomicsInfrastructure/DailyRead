@@ -222,10 +222,10 @@ def test_get_data_with_no_project_dates_closed(data_repo_full, mocked_statusdb_c
         data_master = ngi_data.ProjectDataMaster(config_values)
         data_master.sources[0].statusdb_session.rows.return_value = mocked_statusdb_conn_rows
         proj_no_dates = deepcopy(data_master.sources[0].statusdb_session.rows.return_value[1])
-        proj_no_dates.value["proj_dates"] = {}
-        proj_no_dates.value["portal_id"] = "NGI123459"
-        proj_no_dates.value["project_id"] = "NGI123459"
-        proj_no_dates.key[1] = "NGI123459"
+        proj_no_dates["value"]["proj_dates"] = {}
+        proj_no_dates["value"]["portal_id"] = "NGI123459"
+        proj_no_dates["value"]["project_id"] = "NGI123459"
+        proj_no_dates["key"][1] = "NGI123459"
         data_master.sources[0].statusdb_session.rows.return_value.append(proj_no_dates)
         with caplog.at_level(logging.INFO):
             data_master.get_data("NGI123459")
@@ -246,10 +246,10 @@ def test_get_data_with_no_project_dates_ongoing(data_repo_full, mocked_statusdb_
         data_master = ngi_data.ProjectDataMaster(config_values)
         data_master.sources[0].statusdb_session.rows.return_value = mocked_statusdb_conn_rows
         proj_no_dates = deepcopy(data_master.sources[0].statusdb_session.rows.return_value[0])
-        proj_no_dates.value["proj_dates"] = {}
-        proj_no_dates.value["portal_id"] = "NGI123459"
-        proj_no_dates.value["project_id"] = "NGI123459"
-        proj_no_dates.key[1] = "NGI123459"
+        proj_no_dates["value"]["proj_dates"] = {}
+        proj_no_dates["value"]["portal_id"] = "NGI123459"
+        proj_no_dates["value"]["project_id"] = "NGI123459"
+        proj_no_dates["key"][1] = "NGI123459"
         data_master.sources[0].statusdb_session.rows.return_value.append(proj_no_dates)
         with caplog.at_level(logging.INFO):
             data_master.get_data("NGI123459")
